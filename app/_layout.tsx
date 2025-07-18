@@ -28,7 +28,7 @@ const RootLayout = () => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <Stack
         screenOptions={{
           headerShown: false,
@@ -38,6 +38,8 @@ const RootLayout = () => {
         <Stack.Screen name="criminals/index" />
         <Stack.Screen name="criminals/new" />
         <Stack.Screen name="criminals/[id]" />
+        <Stack.Screen name="criminals/[id]/edit" />
+        <Stack.Screen name="test" />
       </Stack>
       <Toast />
     </SafeAreaView>

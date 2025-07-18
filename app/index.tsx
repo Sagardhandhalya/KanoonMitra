@@ -8,10 +8,10 @@ import { router } from "expo-router";
 import { supabase } from "@/utils/supabase";
 
 const HomePage = () => {
-  const { text100, bg100, bg300 } = useAppTheme();
+  const { text100, bg200 } = useAppTheme();
 
   return (
-    <Box ph={16} bg={bg100} flex={1}>
+    <Box ph={16} bg="#fff" flex={1}>
       <Text variant="h1" center mt={32}>
         Hi, Welcome!
       </Text>
@@ -22,7 +22,7 @@ const HomePage = () => {
             router.push("/criminals");
           }}
         >
-          <Box bg={bg300} padding={16} br={16} justify="center" align="center">
+          <Box bg={bg200} padding={16} br={16} justify="center" align="center">
             <Ionicons name="list-circle" size={64} />
             <Text variant="h4" color={text100} mt={8}>
               CRIMINAL RECORDS

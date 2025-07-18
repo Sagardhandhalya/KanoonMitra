@@ -112,3 +112,32 @@ export const parseStyleAttributes = ({
 
   return final;
 };
+
+export const validateImageUrl = (url: string | null): boolean => {
+  if (!url) return false;
+
+  // Check if it's a valid URL
+  try {
+    new URL(url);
+  } catch {
+    return false;
+  }
+
+  // Check if it's a Supabase storage URL
+  if (url.includes("supabase.co/storage/v1/object/public/")) {
+    return true;
+  }
+
+  return true;
+};
+
+export const getImageUrl = (url: string | null): string | null => {
+  if (!validateImageUrl(url)) {
+    return null;
+  }
+  return url;
+};
+
+export const formatImageUrl = (fileName: string): string => {
+  return `https://lhkifzhuqfwxqenxgplr.supabase.co/storage/v1/object/public/files/${fileName}`;
+};

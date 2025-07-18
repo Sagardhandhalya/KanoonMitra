@@ -15,11 +15,67 @@ import {
   View,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import Button from "@/components/Button";
+
+// Track unlock state for this session
+let hasUnlockedCriminals = false;
 
 export default function HomeScreen() {
   const { primary100, primary200, text100, bg200 } = useAppTheme();
   const [criminals, setCriminals] = useState<ICriminal[]>([]);
   const [search, setSearch] = useState("");
+
+  // Password lock state
+  const [password, setPassword] = useState("");
+  const [isLocked, setIsLocked] = useState(!hasUnlockedCriminals);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [fetchedPassword, setFetchedPassword] = useState<string | null>(null);
+  const [fetchingPassword, setFetchingPassword] = useState(true);
+  const [fetchError, setFetchError] = useState("");
+
+  // Fetch password from Supabase on mount
+  useEffect(() => {
+    const fetchPassword = async () => {
+      setFetchingPassword(true);
+      setFetchError("");
+      try {
+        const { data, error } = await supabase
+          .from("app_settings")
+          .select("password")
+          .eq("screen", "criminals")
+          .single();
+        if (error || !data) {
+          setFetchError("Could not fetch password. Please try again later.");
+          setFetchedPassword(null);
+        } else {
+          setFetchedPassword(data.password);
+        }
+      } catch (e) {
+        setFetchError("Could not fetch password. Please try again later.");
+        setFetchedPassword(null);
+      } finally {
+        setFetchingPassword(false);
+      }
+    };
+    fetchPassword();
+  }, []);
+
+  const handleUnlock = () => {
+    setLoading(true);
+    setError("");
+    setTimeout(() => {
+      if (password === fetchedPassword) {
+        setIsLocked(false);
+        hasUnlockedCriminals = true;
+        setPassword("");
+        setError("");
+      } else {
+        setError("Incorrect password. Please try again.");
+      }
+      setLoading(false);
+    }, 700); // Simulate async check
+  };
 
   const fetchData = async () => {
     try {
@@ -39,15 +95,80 @@ export default function HomeScreen() {
     fetchData();
   });
 
+  // Password lock overlay
+  if (isLocked) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#fff",
+        }}
+      >
+        <Text variant="h2" fw="bold" mb={16} center>
+          Enter Password
+        </Text>
+        <Text fs={16} ph={64} color="#888" mb={32} center>
+          This screen is protected. Please enter the password to continue.
+        </Text>
+        {fetchingPassword ? (
+          <Button
+            label="Loading password..."
+            loading
+            disabled
+            style={{ minWidth: 160, marginBottom: 16 }}
+          />
+        ) : fetchError ? (
+          <Text color="#ef4444" mb={16} center>
+            {fetchError}
+          </Text>
+        ) : (
+          <>
+            <Input
+              placeholder="Password"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+              editable={!loading}
+              style={{ minWidth: 220, marginBottom: 16 }}
+            />
+            {error ? (
+              <Text color="#ef4444" mb={16} center>
+                {error}
+              </Text>
+            ) : null}
+            <Button
+              label={loading ? "Unlocking..." : "Unlock"}
+              onPress={handleUnlock}
+              loading={loading}
+              disabled={loading || !password}
+              style={{ minWidth: 160 }}
+            />
+          </>
+        )}
+      </View>
+    );
+  }
+
   return (
-    <View style={{ flex: 1, paddingHorizontal: 16 }}>
+    <View style={{ flex: 1, paddingHorizontal: 16, backgroundColor: "#fff" }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 200 }}
       >
-        <Text variant="h2" center mv={16}>
-          Criminal List
-        </Text>
+        <Box horizontal align="center" gap={16}>
+          <Ionicons
+            name="arrow-back"
+            size={20}
+            onPress={() => {
+              router.back();
+            }}
+          />
+          <Text variant="h2" center mv={16}>
+            Criminal List
+          </Text>
+        </Box>
         <Input
           placeholder="search name"
           keyboardType="number-pad"

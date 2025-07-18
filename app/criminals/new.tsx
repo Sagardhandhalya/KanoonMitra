@@ -41,7 +41,7 @@ export const CriminalForm: React.FC<CriminalFormProps> = ({
   onSubmit,
   submitLabel,
 }) => {
-  const { primary100 } = useAppTheme();
+  const { primary100, bg100 } = useAppTheme();
   const [formData, setFormData] = useState({
     fullName: initialValues?.fullName || "",
     address: initialValues?.address || "",
@@ -148,11 +148,6 @@ export const CriminalForm: React.FC<CriminalFormProps> = ({
           text2: error.message || "An error occurred while adding the record.",
         });
       } else {
-        console.log("Insert success:", data);
-        Toast.show({
-          type: "success",
-          text1: "Record added successfully!",
-        });
         router.replace("/criminals");
       }
     } catch (error) {
@@ -198,7 +193,7 @@ export const CriminalForm: React.FC<CriminalFormProps> = ({
   };
 
   return (
-    <Box>
+    <Box bg="#fff">
       <TouchableOpacity
         style={{ marginLeft: 12, marginTop: 8 }}
         onPress={() => router.back()}
@@ -211,8 +206,7 @@ export const CriminalForm: React.FC<CriminalFormProps> = ({
           paddingTop: 24,
           paddingBottom: 32,
           alignItems: "stretch",
-          backgroundColor: "#F7FAFC",
-          minHeight: 700,
+          minHeight: "100%",
         }}
         showsVerticalScrollIndicator={false}
       >

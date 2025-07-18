@@ -8,7 +8,7 @@ import {
   Linking,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, useFocusEffect } from "expo-router";
 import { supabase } from "@/utils/supabase";
 import Text from "@/components/Text";
 import Button from "@/components/Button";
@@ -36,9 +36,11 @@ const Details = () => {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchData();
+    }, [id])
+  );
 
   const handleDelete = async () => {
     Alert.alert(
@@ -63,7 +65,6 @@ const Details = () => {
                 text2: error.message,
               });
             } else {
-              Toast.show({ type: "success", text1: "Record deleted" });
               router.replace("/criminals");
             }
           },
@@ -110,6 +111,10 @@ const Details = () => {
                 marginBottom: 12,
                 backgroundColor: theme.bg200,
               }}
+              onError={() => {
+                console.log("Failed to load image:", data.avatar_url);
+              }}
+              resizeMode="cover"
             />
           ) : (
             <View

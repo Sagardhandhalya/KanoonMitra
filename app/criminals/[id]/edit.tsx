@@ -70,8 +70,7 @@ const EditCriminal = () => {
         text2: error.message,
       });
     } else {
-      Toast.show({ type: "success", text1: "Record updated" });
-      router.back();
+      router.replace({ pathname: "/criminals/[id]", params: { id } });
     }
   };
 
