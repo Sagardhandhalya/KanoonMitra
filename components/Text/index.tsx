@@ -22,13 +22,51 @@ const Text: React.FC<TextComponentProps & StyleAttributes> = ({
   ...rest
 }) => {
   const textStyles = {
-    h1: { fontSize: 32, fontWeight: "900", lineHeight: 40 } as TextStyle,
-    h2: { fontSize: 24, fontWeight: "800", lineHeight: 30 },
-    h3: { fontSize: 20, fontWeight: "700", lineHeight: 25 },
-    h4: { fontSize: 16, fontWeight: "600", lineHeight: 20 },
-    h5: { fontSize: 13, fontWeight: "600", lineHeight: 18 },
-    h6: { fontSize: 10, fontWeight: "500", lineHeight: 15 },
-    p: { fontSize: 14, fontWeight: "400", lineHeight: 20 },
+    h1: {
+      fontSize: 32,
+      fontWeight: "900",
+      lineHeight: 40,
+      fontFamily: "Roboto_900Black",
+      color: "#22223b",
+    } as TextStyle,
+    h2: {
+      fontSize: 24,
+      fontWeight: "800",
+      lineHeight: 30,
+      fontFamily: "Roboto_700Bold",
+      color: "#22223b",
+    },
+    h3: {
+      fontSize: 20,
+      fontWeight: "700",
+      lineHeight: 25,
+      fontFamily: "Roboto_700Bold",
+      color: "#22223b",
+    },
+    h4: {
+      fontSize: 16,
+      fontWeight: "600",
+      lineHeight: 20,
+      fontFamily: "Roboto_500Medium",
+    },
+    h5: {
+      fontSize: 13,
+      fontWeight: "600",
+      lineHeight: 18,
+      fontFamily: "Roboto_500Medium",
+    },
+    h6: {
+      fontSize: 10,
+      fontWeight: "500",
+      lineHeight: 15,
+      fontFamily: "Roboto_500Medium",
+    },
+    p: {
+      fontSize: 14,
+      fontWeight: "400",
+      lineHeight: 20,
+      fontFamily: "Roboto_400Regular",
+    },
   };
 
   const layoutStyles = parseStyleAttributes(rest);
@@ -39,6 +77,13 @@ const Text: React.FC<TextComponentProps & StyleAttributes> = ({
   }
   if (fw) {
     finalStyle = { ...finalStyle, fontWeight: fw };
+    // Set fontFamily based on weight if not overridden by fs
+    if (fw === "900") finalStyle.fontFamily = "Roboto_900Black";
+    else if (fw === "700" || fw === "800")
+      finalStyle.fontFamily = "Roboto_700Bold";
+    else if (fw === "600" || fw === "500")
+      finalStyle.fontFamily = "Roboto_500Medium";
+    else finalStyle.fontFamily = "Roboto_400Regular";
   }
   if (lh) {
     finalStyle = { ...finalStyle, lineHeight: lh };

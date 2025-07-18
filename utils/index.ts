@@ -24,7 +24,13 @@ export interface StyleAttributes {
   height?: DimensionValue;
   flex?: number;
   align?: "flex-start" | "center" | "flex-end" | "stretch" | "baseline";
-  justify?: "flex-start" | "center" | "flex-end" | "space-between" | "space-around" | "space-evenly";
+  justify?:
+    | "flex-start"
+    | "center"
+    | "flex-end"
+    | "space-between"
+    | "space-around"
+    | "space-evenly";
   gap?: number;
   alignSelf?: "auto" | "flex-start" | "center" | "flex-end";
   horizontal?: boolean;
