@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "KanoonMitra",
-    "slug": "KanoonMitra",
+    "name": "Police mitra",
+    "slug": "police-mitra",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -16,7 +16,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.sagar0.KanoonMitra"
+      "package": "com.sagar0.policemitra"
     },
     "web": {
       "bundler": "metro",

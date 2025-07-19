@@ -160,14 +160,7 @@ const Details = () => {
             {data.dhara_no}
           </Text>
         </View>
-        <View style={{ marginBottom: 10 }}>
-          <Text variant="h4" color={theme.text100}>
-            Pincode
-          </Text>
-          <Text variant="p" color={theme.text100} fs={16} lh={22}>
-            {data.pincode}
-          </Text>
-        </View>
+
         <View style={{ marginBottom: 10 }}>
           <Text variant="h4" color={theme.text100}>
             Created At

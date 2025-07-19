@@ -261,9 +261,11 @@ export const CriminalForm: React.FC<CriminalFormProps> = ({
           label="Address"
           placeholder="Enter address"
           value={formData.address}
+          multiline
           onChangeText={(text) =>
             setFormData((prevState) => ({ ...prevState, address: text }))
           }
+          numberOfLines={3}
         />
         <Input
           label="Note"
@@ -307,7 +309,9 @@ export const CriminalForm: React.FC<CriminalFormProps> = ({
         />
         <Input
           label="Guna Register Number"
-          placeholder="ex: 550"
+          multiline
+          numberOfLines={3}
+          placeholder="2324/2002,1002/2322"
           value={formData.gunaRegisterNumber}
           onChangeText={(text) =>
             setFormData((prevState) => ({

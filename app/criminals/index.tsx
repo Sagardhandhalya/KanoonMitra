@@ -4,7 +4,7 @@ import Text from "@/components/Text";
 import { useAppTheme } from "@/hooks/useAppTheme";
 import { supabase } from "@/utils/supabase";
 import { router, useFocusEffect } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Image,
   Linking,
@@ -95,6 +95,20 @@ export default function HomeScreen() {
     fetchData();
   });
 
+  const filterData = useMemo(() => {
+    return criminals.filter((item) => {
+      const { full_name, address, dhara_no, pincode, note } = item;
+      const finalArray = [
+        full_name?.toLowerCase() || "",
+        address?.toLowerCase() || "",
+        dhara_no?.toLowerCase() || "",
+        note?.toLowerCase() || "",
+      ];
+      const searchText = search.toLowerCase();
+      return finalArray.some((field) => field.includes(searchText));
+    });
+  }, [search, criminals]);
+
   // Password lock overlay
   if (isLocked) {
     return (
@@ -171,14 +185,11 @@ export default function HomeScreen() {
         </Box>
         <Input
           placeholder="search name"
-          keyboardType="number-pad"
           value={search}
           onChangeText={(text) => setSearch(text)}
         />
 
-        {criminals.filter((item) =>
-          item.full_name.toLowerCase().includes(search.toLowerCase())
-        ).length === 0 && (
+        {filterData?.length === 0 && (
           <View style={{ alignItems: "center", marginTop: 64 }}>
             <Ionicons
               name="people-outline"
@@ -194,106 +205,94 @@ export default function HomeScreen() {
             </Text>
           </View>
         )}
-        {criminals
-          .filter((item) =>
-            item.full_name.toLowerCase().includes(search.toLowerCase())
-          )
-          .map(({ full_name, id, avatar_url, address, lat, lon }) => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  router.push(`/criminals/${id}`);
+        {filterData.map(({ full_name, id, avatar_url, address, lat, lon }) => {
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                router.push(`/criminals/${id}`);
+              }}
+              key={id}
+              style={{
+                marginVertical: 8,
+                gap: 16,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: bg200,
+                padding: 12,
+                borderRadius: 12,
+              }}
+            >
+              <Image
+                source={{
+                  uri: avatar_url,
                 }}
-                key={id}
+                width={100}
+                height={120}
                 style={{
-                  marginVertical: 8,
-                  gap: 16,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: bg200,
-                  padding: 12,
                   borderRadius: 12,
                 }}
-              >
-                <Image
-                  source={{
-                    uri: avatar_url,
-                  }}
-                  width={100}
-                  height={120}
-                  style={{
-                    borderRadius: 12,
-                  }}
-                />
-                <View style={{ flex: 1 }}>
-                  <Text variant="h3">{full_name}</Text>
-                  <Text flex={1} variant="p">
-                    {address}
-                  </Text>
-                  <Box mt={16} horizontal gap={8}>
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: primary200,
-                        paddingHorizontal: 12,
-                        paddingVertical: 8,
-                        borderRadius: 8,
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                      onPress={() => {
-                        try {
-                          Linking.openURL(
-                            `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`
-                          );
-                        } catch (error) {
-                          console.log(error);
-                        }
-                      }}
-                    >
-                      <Ionicons
-                        name="map"
-                        size={18}
-                        color={bg200}
-                        style={{ marginRight: 6 }}
-                      />
-                      <Text color={bg200} center>
-                        View on Map
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: text100,
-                        paddingHorizontal: 12,
-                        paddingVertical: 8,
-                        borderRadius: 8,
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                      onPress={() =>
-                        router.push({
-                          pathname: "/criminals/[id]/edit",
-                          params: { id },
-                        })
+              />
+              <View style={{ flex: 1 }}>
+                <Text variant="h3">{full_name}</Text>
+                <Text flex={1} variant="p">
+                  {address}
+                </Text>
+                <Box mt={16} horizontal gap={8}>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: primary200,
+                      paddingHorizontal: 12,
+                      paddingVertical: 8,
+                      borderRadius: 8,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                    onPress={() => {
+                      try {
+                        Linking.openURL(
+                          `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`
+                        );
+                      } catch (error) {
+                        console.log(error);
                       }
-                    >
-                      <Ionicons
-                        name="create-outline"
-                        size={18}
-                        color={bg200}
-                        style={{ marginRight: 6 }}
-                      />
-                      <Text color={bg200} center>
-                        Edit
-                      </Text>
-                    </TouchableOpacity>
-                  </Box>
-                </View>
-              </TouchableOpacity>
-            );
-          })}
+                    }}
+                  >
+                    <Ionicons
+                      name="map"
+                      size={18}
+                      color={bg200}
+                      style={{ marginRight: 6 }}
+                    />
+                    <Text color={bg200} center>
+                      View on Map
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: text100,
+                      paddingHorizontal: 12,
+                      paddingVertical: 8,
+                      borderRadius: 8,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                    onPress={() =>
+                      router.push({
+                        pathname: "/criminals/[id]/edit",
+                        params: { id },
+                      })
+                    }
+                  >
+                    <Ionicons name="create-outline" size={18} color={bg200} />
+                  </TouchableOpacity>
+                </Box>
+              </View>
+            </TouchableOpacity>
+          );
+        })}
       </ScrollView>
 
       <View
