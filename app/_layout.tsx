@@ -39,7 +39,7 @@ const RootLayout = () => {
         <Stack.Screen name="criminals/new" />
         <Stack.Screen name="criminals/[id]" />
         <Stack.Screen name="criminals/[id]/edit" />
-        <Stack.Screen name="test" />
+        <Stack.Screen name="criminal-map" />
       </Stack>
       <Toast />
     </SafeAreaView>
